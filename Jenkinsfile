@@ -34,9 +34,11 @@ pipeline {
         }
 
         stage('Clean Up') {
-            steps {
-                bat 'docker rmi %DOCKER_IMAGE% || exit 0'
-            }
+    steps {
+        script {
+            bat 'docker image rm raji-jay/jenkins-node-app || exit 0'
         }
+    }
+}
     }
 }
