@@ -36,7 +36,7 @@ pipeline {
         stage('Clean Up') {
     steps {
         script {
-            bat 'docker image rm raji-jay/jenkins-node-app || exit 0'
+            bat 'docker image rm rajijay/jenkins-node-app || exit 0'
         }
     }
 }
