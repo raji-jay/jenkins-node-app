@@ -2,43 +2,39 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "raji-jay/jenkins-node-app"
+        DOCKER_IMAGE = 'rajyjay/jenkins-node-app'
+        DOCKER_USERNAME = 'rajyjay'
+        DOCKER_PASSWORD = 'yourActualPasswordHere' // 🔁 Replace this with your actual Docker Hub password or token
     }
 
     stages {
-        stage('Install Dependencies') {
+        stage('Checkout Code') {
             steps {
-                bat 'npm install'
+                git 'https://github.com/your-repo/jenkins-node-app.git' // 🔁 Replace with your actual Git repo URL
             }
         }
 
         stage('Run Tests') {
             steps {
+                bat 'npm install'
                 bat 'npm test'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t raji-jay/jenkins-node-app .'
+                bat "docker build -t %DOCKER_IMAGE% ."
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'rajijay', passwordVariable: 'jayakumar@31')]) {
-                    bat 'echo %PASSWORD% | docker login -u %USERNAME% --password-stdin'
-                    bat 'docker push %DOCKER_IMAGE%'
-                }
+                bat """
+                    echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
+                    docker push %DOCKER_IMAGE%
+                """
             }
         }
+    }
+}
 
-        stage('Clean Up') {
-    steps {
-        script {
-            bat 'docker image rm rajijay/jenkins-node-app || exit 0'
-        }
-    }
-}
-    }
-}
