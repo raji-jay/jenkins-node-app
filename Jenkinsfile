@@ -20,13 +20,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %DOCKER_IMAGE% .'
+                bat 'docker build -t raji-jay/jenkins-node-app .'
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'rajijay', passwordVariable: 'jayakumar@31')]) {
                     bat 'echo %PASSWORD% | docker login -u %USERNAME% --password-stdin'
                     bat 'docker push %DOCKER_IMAGE%'
                 }
