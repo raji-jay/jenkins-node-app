@@ -2,25 +2,26 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "raji-jay/jenkins-node-app"
+        DOCKER_IMAGE = 'rajyjay/jenkins-node-app'
     }
 
     stages {
-        stage('Install Dependencies') {
+        stage('Checkout') {
             steps {
-                bat 'npm install'
+                git 'https://github.com/your-user/jenkins-node-app.git'
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
+                bat 'npm install'
                 bat 'npm test'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t raji-jay/jenkins-node-app .'
+                bat 'docker build -t %DOCKER_IMAGE% .'
             }
         }
 
@@ -32,13 +33,5 @@ pipeline {
                 }
             }
         }
-
-        stage('Clean Up') {
-    steps {
-        script {
-            bat 'docker image rm rajijay/jenkins-node-app || exit 0'
-        }
-    }
-}
     }
 }
